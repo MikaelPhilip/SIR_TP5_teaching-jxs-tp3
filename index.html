@@ -10,14 +10,25 @@
 <body ng-app="pokedex">
 
 	<div class="container">
-		<h1>Pokésir</h1>
+		<h1>Pokédex SuperSabre-MikMik version</h1>
 
 		<!-- Search -->
-		<div></div>
+		<div ng-controller="ctrlPokemon">
+			Numero: <input type="text" name="numPok" ng-model="poknum">
+			Nom: <input type="text" name="nomPok" ng-model="poknom">
+			
+			<select>
+				<option 
+				ng-repeat="x in listPokemon | filter:{id:poknum} | filter:poknom" 
+				value="{{x.id}}"> {{x.nom}}
+				</option>
+			</select>
+			<input type="button" name="get" value="Go!"  ng-click="search()">
+		</div>
 
 		<!-- Pokémon information -->
-		<div></div>
-
+	
+	
 	</div>
 
     <!-- Dependencies -->
