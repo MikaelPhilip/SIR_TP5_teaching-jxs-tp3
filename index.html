@@ -17,13 +17,13 @@
 			Numero: <input type="text" name="numPok" ng-model="poknum">
 			Nom: <input type="text" name="nomPok" ng-model="poknom">
 			
-			<select>
+			<select ng-model="pokesel">
 				<option 
-				ng-repeat="x in listPokemon | filter:{id:poknum} | filter:poknom" 
-				value="{{x.id}}"> {{x.nom}}
+				ng-repeat="x in listPokemon | filter:{entry_number:poknum} | filter:poknom" 
+				value="{{x.entry_number}}"> {{x.entry_number}}-{{x.pokemon_species.name}}
 				</option>
 			</select>
-			<input type="button" name="get" value="Go!"  ng-click="search()">
+			<input type="button" name="get" value="Go!" ng-click="search(pokesel)">
 		</div>
 
 		<!-- Pokémon information -->
