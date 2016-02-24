@@ -14,19 +14,28 @@
 
 		<!-- Search -->
 		<div ng-controller="ctrlPokemon">
-			Numero: <input type="text" name="numPok" ng-model="poknum">
-			Nom: <input type="text" name="nomPok" ng-model="poknom">
-			
-			<select ng-model="pokesel">
+			Numero: <input type="text" class="form-control" name="numPok" ng-model="poknum">
+			Nom: <input type="text" class="form-control" name="nomPok" ng-model="poknom">
+			<label for="sel1">Pokemons:</label>
+			<select class="form-control" ng-model="pokesel">
 				<option 
 				ng-repeat="x in listPokemon | filter:{entry_number:poknum} | filter:poknom" 
 				value="{{x.entry_number}}"> {{x.entry_number}}-{{x.pokemon_species.name}}
 				</option>
 			</select>
-			<input type="button" name="get" value="Go!" ng-click="search(pokesel)">
+			<input type="button" class="btn btn-lg btn-primary" name="get" value="Go!" ng-click="search(pokesel)">
 		</div>
 
 		<!-- Pokémon information -->
+		<div ng-controller="ctrlInfoPokemon">
+			<h1>{{id}}-{{name}}</h1>
+			<h2>Attaques</h2>
+			<ul>
+				<li ng-repeat="x in moves">
+					{{x.move.name}}
+				</li>
+			</ul>
+		</div>
 	
 	
 	</div>
