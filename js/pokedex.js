@@ -24,15 +24,16 @@ function ctrlPokemon($scope, $http, $log,sendSearch){
 			$scope.listPokemon= response.data.pokemon_entries
     });
 	
-	  
+	//Fonction de recherche: paramêtre item est un tableau avec l'id et le nom  
 	$scope.search = function(item) {
 		//test d'affichage 
 		//$log.log($scope.listPokemon[item-1]);
 		//test pour tester le service de recherche de pokemon
 		//var pokemon = pokeInfo.get({id:item-1});
 		//console.log(pokemon);
-		//Appel du service send search pour stocker dans ses variables
-		sendSearch.id=item;
+		//Appel du service send search pour stocker dans ses variables l'id
+		sendSearch.setId(item);
+		//sendSearch.name= item.pokemon_species.name;
 	}
 }
 
@@ -47,10 +48,11 @@ pokeApp.controller('ctrlInfoPokemon', ctrlInfoPokemon);
 
 //Fonction pour afficher les infos sur un pokemon (4éme parametre = service qu'il va retrouver tout seul si le nom est correct))
 function ctrlInfoPokemon($scope, $http, $log, pokeInfo, sendSearch){
+	$scope.sendSearch = sendSearch;
 	//On rappel à chaque changement de variable de sendSearch.id
-	$scope.$watch('sendSearch.id', function() {
+	$scope.$watch('sendSearch.getId()', function() {
 		//On récupere en indiquant l'id un pokemon
-		var pokemon = pokeInfo.get({id:1});
+		var pokemon = pokeInfo.get({id:sendSearch.getId()});
 		//Une fois le résultat récuperer on va enregistrer dans des variables les infos
 		pokemon.$promise.then(function (result) {
 			$scope.pokemon = result;
@@ -58,15 +60,19 @@ function ctrlInfoPokemon($scope, $http, $log, pokeInfo, sendSearch){
 			$scope.id = result.id;
 			$scope.name = result.name;
 			$scope.moves = result.moves;
-		});
+		}, true);
 	});
 }
 
 /* Déclaration d'un service qui permet d'envoyer les infos du controler pour la recherche vers le controler pour l'affichage*/
 pokeApp.factory('sendSearch', function() {
-	var id=0;
-	var nom;
-	return id;
+	var data= {id: 0};	
+	
+	data.setId = function(num){
+		data.id=num;
+	}
+	data.getId = function (){
+		return data.id;
+	}
+	return data;
 });
-
-//TODO: modifier le service entre les deux controlleur pour qu'il soit correctement utilisé
