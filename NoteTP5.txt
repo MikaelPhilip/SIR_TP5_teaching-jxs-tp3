@@ -1,0 +1,146 @@
+===========================Recherche================
+
+ng-model="pok.num" dans un input pour sauvegarder la valeur dans cette vairable
+
+{{pok.num}} dans du HTML pour afficher une variables
+
+
+===========================controleur===============
+
+1)En html: ng-controller="searchPokemon" dans un div
+
+2)en js on associe le controleur à une fonction
+angular.controller('searchPokemon', searchPokemon);
+
+3)on declare et remplit la fonction (scope pour récuperer les données):
+//fonction associé à la ng-controller
+function searchPokemon($scope){
+	¤scope.listepokemon = value ; //definition du model lié au controleur (ajout d'une varaible dans le model lié au controlleur)
+}
+
+/!\ toute les manipulations pour ce controleur doit se faire en les balises div
+/!\ ng-model=var peut déclarer un element du model ou en faire réference à un 
+On crée un controlleur auquel on attache une fonction avec la définition du modele ($scope.var) /fonctionnement ($scope.fonc= fonction {} )
+et aprés tout manipulation avec ce controlleur ce fait des ng-..... entre les balises div du controleur.
+
+=============================Manipulation balise mg=============================
+-->Lister les objects dans un select:
+
+<select>
+	<option ng-repeat="x in listPokemon" value="{{x.id}}"> {{x.nom}}</option>
+</select>
+ 
+Avec des filtre: 
+=>cas on veut juste prendre l'element dans la liste (ng-selected)
+<select ng-model="poknum"> //nom du filtre utilisé
+				<option 
+				ng-selected="{{x.id == poknum}}" //condition du filtre
+				ng-repeat="x in listPokemon" 
+				value="{{x.id}}"> {{x.nom}}
+				</option>
+			</select>
+=>Cas on réduit le choix de la liste au fur et à fur qu'on compléte le champ		
+			<select>
+				<option 
+				ng-repeat="x in listPokemon | filter:{varDansX:valfiltre}"  ou filter:valfiltre directement si on veut juste filtrer avec les chaines de caractéres du combo-box
+				value="{{x.id}}"> {{x.nom}}
+				</option>
+			</select>
+			
+--> Lier un boutton à une fonction declarer dans js:
+
+ng-click="search(param)" 
+$scope.search = function(param) {
+	console.log (param);
+}
+
+--> Récuperer dans une liste un json depuis un lien:
+
+$http({
+        method: 'GET',
+        url: url,
+    }).then(function successCallback(response) {
+			$scope.listPokemon= response.data.nomVariable
+			console.log($scope.listPokemon);
+    });
+	
+--> Recuperer une valeur sur un formulaire:
+
+1) créer un ng-model sur l'element : <select ng-model="pokesel">
+
+2) le rajouter en parametre dans un onchange.. on click d'un autre element HTML : <input type="button" name="get" value="Go!"  ng-click="search(pokesel)">
+
+===============================Utilisation du $ressource==========================
+
+$ressource sert à faire des requete sur des liens et récuperer des résultats.
+
+Déclaration d'un service qui sera notre ressource:
+/* Déclaration d'un service qui permet de récuperer un pokemon (on l'appellera avec "pokeInfo.get"): 
+ce service lance des requete sur un lien précis*/
+pokeApp.factory('pokeInfo', function($resource) {
+  return $resource(pokeApiUrl+"api/v2/pokemon/:id/",{id:'@id'}); //second parametre= liste des paramêtres de l'url
+});
+
+Utilisation dans un controleur par exemple:
+//Lancement requete
+var pokemon = pokeInfo.get({id:1});
+
+//Une fois le résultat récuperer on va enregistrer dans des variables les infos récuperer
+pokemon.$promise.then(function (result) {
+	$scope.pokemon = result;
+	console.log($scope.pokemon);
+});
+
+===============================Liens entre deux controlleurs (transfert de données)====================================
+
+Pour transferer des données on utilise un service avec des get/set comme celui-ci:
+
+pokeApp.factory('sendSearch', function() {
+	var data= {id: 0, name:""};	
+	
+	data.setId = function(num){
+		data.id=num;
+	}
+	data.getId = function (){
+		return data.id;
+	}
+	return data;
+});
+
+Un controleur va appeller le service pour rentrer des données: on indique le service en paramêtre et on appelle les set, ex: sendSearch.setId(item);
+
+Un controlleur va appeller le service pour récuperer les données : on indique le service en paramêtre et on appelle les get: sendSearch.getId();
+
+Note: réagir au changmeent d'une variable : $scope.$watch
+
+ex: $scope.$watch('id', function() {
+		//On récupere en indiquant l'id un pokemon
+		var pokemon = pokeInfo.get({id:id});
+		//Une fois le résultat récuperer on va enregistrer dans des variables les infos
+		pokemon.$promise.then(function (result) {
+			$scope.pokemon = result;
+			console.log($scope.pokemon);
+			$scope.id = result.id;
+			$scope.name = result.name;
+			$scope.moves = result.moves;
+		}, true);
+	});
+	
+/!\ Ne pas oublier le true à la fin
+
+/!\ Cas on réagit à une variable d'un service il faut pas oublier d'inclure le service dans le scope: $scope.sendSearch = sendSearch;
+
+===============================Créer une directive===============================
+
+Déclarer dans le js:
+
+pokeApp.directive('ngPokedex', function() {
+  return {
+    restrict: 'A', //Comment on va utiliser la directive (A/E/C/M)
+    templateUrl: 'pokedex.html' //fichier qui contient notre template html
+  }
+});
+
+Ici on indique qu'on déclare la directive comme un attribut et qu'on utilise un template dans un fichier qui est indiqué dans TemplateURL
+
+/!\Faire bien attention sur le nom entre HTML et JS : sur js "ngPokedex", html "ng-pokedex" (A dans js => -a dans html) 

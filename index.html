@@ -10,10 +10,12 @@
 <body ng-app="pokedex">
 
 	<div class="container">
-		<h1>Pokédex SuperSabre-MikMik version</h1>
-
+		<div ng-pokedex></div>
+		<!--On met en commentaire tout le html qui est désormais dans notre propre template-->
+		<!--<h1>Pokédex SuperSabre-Mika version</h1>-->
+	
 		<!-- Search -->
-		<div ng-controller="ctrlPokemon">
+		<!--<div ng-controller="ctrlPokemon">
 			Numero: <input type="text" class="form-control" name="numPok" ng-model="poknum">
 			Nom: <input type="text" class="form-control" name="nomPok" ng-model="poknom">
 			<label for="sel1">Pokemons:</label>
@@ -24,10 +26,10 @@
 				</option>
 			</select>
 			<input type="button" class="btn btn-lg btn-primary" name="get" value="Go!" ng-click="search(pokesel)">
-		</div>
+		</div>-->
 
 		<!-- Pokémon information -->
-		<div ng-controller="ctrlInfoPokemon">
+		<!--<div ng-controller="ctrlInfoPokemon">
 			<h1>{{id}}-{{name}}</h1>
 			<h2>Attaques</h2>
 			<ul>
@@ -35,9 +37,7 @@
 					{{x.move.name}}
 				</li>
 			</ul>
-		</div>
-	
-	
+		</div>-->
 	</div>
 
     <!-- Dependencies -->

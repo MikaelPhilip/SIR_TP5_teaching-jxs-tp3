@@ -9,11 +9,11 @@ pokeApp.config(['$resourceProvider', function($resourceProvider) {
 var pokeApiUrl = "http://pokeapi.co/"
 
 /*Declaration d'un controleur du module*/
-pokeApp.controller('ctrlPokemon', ctrlPokemon); //Associé un controleur à une function qui représente son model
+pokeApp.controller('ctrlPokemon', ctrlPokemon); //Associé un controleur à une fonnction
 
-//Fonction associé à la ng-controler: va permettre d'associer un model au controleur
+//Fonction associé à la ng-controler: va permettre d'associer un model au controleur et les différents traitements possibles
 function ctrlPokemon($scope, $http, $log,sendSearch){
-	//definition d'une liste de pokemon: on récupére la base des données
+	//Definition d'une liste de pokemon: on récupére la base des données
 	pokeApiUrlListTotal = pokeApiUrl + "api/v2/pokedex/1/"; 
 	
 	//Requete pour récuperer une liste de pokemon
@@ -24,7 +24,7 @@ function ctrlPokemon($scope, $http, $log,sendSearch){
 			$scope.listPokemon= response.data.pokemon_entries
     });
 	
-	//Fonction de recherche: paramêtre item est un tableau avec l'id et le nom  
+	//Fonction de recherche: paramêtre item est l'id du pokemon recherché
 	$scope.search = function(item) {
 		//test d'affichage 
 		//$log.log($scope.listPokemon[item-1]);
@@ -33,7 +33,6 @@ function ctrlPokemon($scope, $http, $log,sendSearch){
 		//console.log(pokemon);
 		//Appel du service send search pour stocker dans ses variables l'id
 		sendSearch.setId(item);
-		//sendSearch.name= item.pokemon_species.name;
 	}
 }
 
@@ -48,8 +47,8 @@ pokeApp.controller('ctrlInfoPokemon', ctrlInfoPokemon);
 
 //Fonction pour afficher les infos sur un pokemon (4éme parametre = service qu'il va retrouver tout seul si le nom est correct))
 function ctrlInfoPokemon($scope, $http, $log, pokeInfo, sendSearch){
-	$scope.sendSearch = sendSearch;
-	//On rappel à chaque changement de variable de sendSearch.id
+	$scope.sendSearch = sendSearch; //ATTENTION: Ne pas oublier de rajouter le service dans le scope si on veut utiliser $scope.$watch
+	//On rappelle ce traitement à chaque changement de variable de sendSearch.id
 	$scope.$watch('sendSearch.getId()', function() {
 		//On récupere en indiquant l'id un pokemon
 		var pokemon = pokeInfo.get({id:sendSearch.getId()});
@@ -75,4 +74,12 @@ pokeApp.factory('sendSearch', function() {
 		return data.id;
 	}
 	return data;
+});
+
+/*Création d'une directive contenant tout le structure du pokedex*/
+pokeApp.directive('ngPokedex', function() {
+  return {
+    restrict: 'A', //Comment on va utiliser la directive (A/E/C/M)
+    templateUrl: 'pokedex.html' //fichier qui contient notre template html
+  }
 });
