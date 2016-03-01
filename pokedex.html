@@ -1,7 +1,10 @@
-<h1>Pokedex SuperSabre-Mika version</h1>
+
+<nav class="navbar navbar-inverse">
+		<h1 style="color:white">Pokedex</h1>
+</nav>
 	
 <!-- Search -->
-<div ng-controller="ctrlPokemon">
+<div ng-controller="ctrlPokemon" class="jumbotron">
 	Numero: <input type="text" class="form-control" name="numPok" ng-model="poknum">
 	Nom: <input type="text" class="form-control" name="nomPok" ng-model="poknom">
 	<label for="sel1">Pokemons:</label>
@@ -15,12 +18,31 @@
 </div>
 
 <!-- Pokémon information -->
-<div ng-controller="ctrlInfoPokemon">
-	<h1>{{id}}-{{name}}</h1>
-	<h2>Attaques</h2>
-	<ul>
-		<li ng-repeat="x in moves">
-			{{x.move.name}}
-		</li>
-	</ul>
+<div id="pokeInfo" ng-controller="ctrlInfoPokemon">
+	<div class="alert alert-info">
+		<h1>Resultat</h1>
+	</div>
+	<div class="panel panel-primary">
+		<div class="panel-heading"><h2>{{id}} {{name}}</h2></div>
+		<div class="panel-body"> 
+			<div class="col-lg-4">
+				<img src="http://img.pokemondb.net/artwork/{{name}}.jpg"> <!--Ajout d'une image depuisu ne source extérieur-->
+			</div>
+			<div class="col-lg-6">
+				<p>Experience de base: {{baseXp}}</p>
+				<p>Taille: {{height}} cm</P>
+				<p>Poids: {{weight}} kg</P>
+			</div>
+		</div>
+	</div>
+	<div class="panel panel-primary">
+		<div class="panel-heading"><h2>Attaques</h2></div>
+		<div class="panel-body">
+			<ul>
+				<li ng-repeat="x in moves">
+					{{x.move.name}}
+				</li>
+			</ul>
+		</div>
+	</div>
 </div>

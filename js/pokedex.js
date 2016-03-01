@@ -13,6 +13,8 @@ pokeApp.controller('ctrlPokemon', ctrlPokemon); //Associé un controleur à une fo
 
 //Fonction associé à la ng-controler: va permettre d'associer un model au controleur et les différents traitements possibles
 function ctrlPokemon($scope, $http, $log,sendSearch){
+	//On masque pour le moment la partie résultat
+	$("#pokeInfo").hide();
 	//Definition d'une liste de pokemon: on récupére la base des données
 	pokeApiUrlListTotal = pokeApiUrl + "api/v2/pokedex/1/"; 
 	
@@ -50,16 +52,24 @@ function ctrlInfoPokemon($scope, $http, $log, pokeInfo, sendSearch){
 	$scope.sendSearch = sendSearch; //ATTENTION: Ne pas oublier de rajouter le service dans le scope si on veut utiliser $scope.$watch
 	//On rappelle ce traitement à chaque changement de variable de sendSearch.id
 	$scope.$watch('sendSearch.getId()', function() {
-		//On récupere en indiquant l'id un pokemon
-		var pokemon = pokeInfo.get({id:sendSearch.getId()});
-		//Une fois le résultat récuperer on va enregistrer dans des variables les infos
-		pokemon.$promise.then(function (result) {
-			$scope.pokemon = result;
-			console.log($scope.pokemon);
-			$scope.id = result.id;
-			$scope.name = result.name;
-			$scope.moves = result.moves;
-		}, true);
+		if (typeof sendSearch.getId() != 'undefined'){
+			//On récupere en indiquant l'id un pokemon
+			var pokemon = pokeInfo.get({id:sendSearch.getId()});
+			//Une fois le résultat récuperer on va enregistrer dans des variables les infos
+			pokemon.$promise.then(function (result) {
+				$scope.pokemon = result;
+				console.log($scope.pokemon);
+				$scope.id = result.id;
+				$scope.name = result.name;
+				$scope.moves = result.moves;
+				$scope.height= result.height*10;
+				$scope.weight= result.weight/10;
+				$scope.baseXp= result.base_experience;
+				$("#pokeInfo").show();
+			}, true);
+		}else{
+			alert("Merci d'indiquer un pokemon");
+		}
 	});
 }
 
